@@ -1,0 +1,5 @@
+node_modules/
+.env
+Remiderapp_JSON_KEY/
+reminderapp-450317-5b3805cc1c9f.json  # Ignore the JSON key file
+old_code_files.js
