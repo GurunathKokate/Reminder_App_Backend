@@ -42,23 +42,23 @@ const moment = require("moment-timezone");
 
 
 const sendReminders = async () => {
-  console.log("⏳ Checking for due reminders...");
+  // console.log("⏳ Checking for due reminders...");
 
   const reminders = await getReminders();
-  console.log("📋 Total Reminders Fetched:", reminders.length);
+  // console.log("📋 Total Reminders Fetched:", reminders.length);
 
   const nowIST = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm");
-  console.log("⏰ Current IST Time:", nowIST);
+  // console.log("⏰ Current IST Time:", nowIST);
 
   for (let reminder of reminders.slice(1)) {
     const [id, message, phoneNumber, scheduledTime, status] = reminder;
 
     const scheduledTimeIST = moment.tz(scheduledTime, "Asia/Kolkata").format("YYYY-MM-DD HH:mm");
 
-    console.log(`🔍 Checking Reminder ID: ${id}`);
-    console.log(`📅 Scheduled Time (IST): ${scheduledTimeIST}`);
-    console.log(`📌 Status: ${status}`);
-    console.log(`📞 Phone Number (Before Fix): ${phoneNumber}`);
+    // console.log(`🔍 Checking Reminder ID: ${id}`);
+    // console.log(`📅 Scheduled Time (IST): ${scheduledTimeIST}`);
+    // console.log(`📌 Status: ${status}`);
+    // console.log(`📞 Phone Number (Before Fix): ${phoneNumber}`);
 
     let formattedPhone = phoneNumber.startsWith("+") ? phoneNumber : `+${phoneNumber}`;
     const whatsappPhone = `whatsapp:${formattedPhone}`;
