@@ -63,5 +63,42 @@ const updateReminderStatus = async (id) => {
   }
 };
 
-module.exports = { addReminder, getReminders, updateReminderStatus };
 
+// Delete a reminder from Google Sheets
+const deleteReminder = async (id) => {
+  try {
+    const reminders = await getReminders();
+    const rowIndex = reminders.findIndex((reminder) => reminder[0] === id);
+
+    if (rowIndex > 0) {
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId: SHEET_ID,
+        resource: {
+          requests: [
+            {
+              deleteDimension: {
+                range: {
+                  sheetId: 0, // Assuming it's the first sheet
+                  dimension: "ROWS",
+                  startIndex: rowIndex,
+                  endIndex: rowIndex + 1,
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      console.log(`✅ Reminder ID ${id} deleted.`);
+      return true;
+    } else {
+      console.log("⚠️ Reminder not found.");
+      return false;
+    }
+  } catch (error) {
+    console.error("❌ Error deleting reminder:", error.message);
+    return false;
+  }
+};
+
+module.exports = { addReminder, getReminders, updateReminderStatus, deleteReminder };

@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const { addReminder, getReminders, updateReminderStatus } = require("./sheets");
+const { addReminder, getReminders, updateReminderStatus,deleteReminder} = require("./sheets");
 const twilio = require("twilio");
 const cron = require("node-cron");
 
@@ -37,6 +37,23 @@ app.get("/reminders", async (req, res) => {
   }
 });
 
+
+
+app.delete("/reminders/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const success = await deleteReminder(id);
+
+    if (success) {
+      res.json({ message: "Reminder deleted successfully." });
+    } else {
+      res.status(404).json({ error: "Reminder not found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete reminder" });
+  }
+});
+
 const moment = require("moment-timezone");
 
 
@@ -62,7 +79,7 @@ const sendReminders = async () => {
 
     let formattedPhone = phoneNumber.startsWith("+") ? phoneNumber : `+${phoneNumber}`;
     const whatsappPhone = `whatsapp:${formattedPhone}`;
-    console.log(`📞 Phone Number (After Fix): ${formattedPhone}`);
+    // console.log(`📞 Phone Number (After Fix): ${formattedPhone}`);
 
     if (scheduledTimeIST <= nowIST && status === "Pending") {
       console.log(`📨 Sending messages to ${formattedPhone}...`);
@@ -89,7 +106,7 @@ const sendReminders = async () => {
         console.error("❌ Error sending reminder:", error.message);
       }
     } else {
-      console.log("⏳ Reminder is either not due yet or already sent.");
+      // console.log("⏳ Reminder is either not due yet or already sent.");
     }
   }
 };
